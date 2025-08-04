@@ -1,0 +1,8 @@
+# Local files
+.netrwhist
+viminfo
+
+# Vim plug
+plugged/*
+autoload/*
+history/*
