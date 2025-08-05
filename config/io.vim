@@ -10,11 +10,14 @@ function! EnsureVimhisExists()
 endfunction
 call EnsureVimhisExists()
 
-if has('persistent_undo')
-	set undodir=$HOME/.vim/history
-	set undolevels=5000
-	set undofile
+" Set persistent undo
+if !has('nvim')
+    if !isdirectory($HOME . '/.local/vim/undo')
+        call mkdir($HOME . '/.local/vim/undo', 'p', 0700)
+    endif
+    set undodir=~/.local/vim/undo
 endif
+set undofile
 
 " Don't create swapfile
 set noswapfile

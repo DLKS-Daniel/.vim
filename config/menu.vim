@@ -14,5 +14,6 @@ set wildignore+=*.DS_Store
 set wildignore+=*.aux,*.bbl,*.blg,*.brf,*.fls,*.fdb_latexmk,*.synctex.gz,*.pdf
 
 " Completion behaviour
-set completeopt+=menuone  " Show menu even if there is only one item
-set completeopt-=preview  " Disable the preview window
+" set completeopt+=menuone,longest " Show menu even if there is only one item
+
+" autocmd FileType * setlocal omnifunc=syntaxcomplete#Complete
