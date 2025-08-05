@@ -26,6 +26,14 @@ set encoding=utf-8
 set pumheight=10
 set matchpairs=<:>,(:),[:],{:}
 set novisualbell noerrorbells t_vb=
+set hlsearch  " Highlight search results
+set incsearch
+set ignorecase
+set smartcase
+set wildmode=longest:full,full
+set wildoptions=pum
+set completeopt+=menuone,longest " Show menu even if there is only one item
+autocmd FileType * setlocal omnifunc=syntaxcomplete#Complete
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 
@@ -36,6 +44,7 @@ call plug#begin()
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-fugitive'
 Plug 'sheerun/vim-polyglot'
 Plug 'airblade/vim-gitgutter'
 Plug 'jiangmiao/auto-pairs'
@@ -52,8 +61,6 @@ let g:vimwiki_list = [{'path': '~/vimwiki/',
 
 source ~/.vim/config/io.vim
 source ~/.vim/config/keymap.vim
-source ~/.vim/config/statusline.vim
-source ~/.vim/config/menu.vim
 source ~/.vim/config/autocmd.vim
 source ~/.vim/config/lspconfig.vim
 

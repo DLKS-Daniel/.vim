@@ -44,7 +44,7 @@ vnoremap / :<C-U>call feedkeys('/\%>'.(line("'<")-1).'l\%<'.(line("'>")+1)."l")<
 nnoremap <silent> <leader>dw :call StripTrailingWhitespaces()<CR>
 
 " Lazygit
-nnoremap <leader>lg :!lazygit<CR>
+nnoremap <leader>lg :Git<CR>
 
 " Term
 nnoremap <leader>t :term<CR>
