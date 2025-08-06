@@ -1,16 +1,17 @@
 " ------------------------------
 " General Settings
 " ------------------------------
-set nocompatible
 syntax on
 filetype plugin indent on
+colorscheme desert
+set nocompatible
 set encoding=utf-8
 set t_Co=256
 set background=dark
-colorscheme evening
 
 " UI & Usability
 set number
+set cursorline
 set relativenumber
 set laststatus=2
 set signcolumn=yes
@@ -49,10 +50,6 @@ set novisualbell
 set noerrorbells
 set t_vb=
 
-" Netrw
-let g:netrw_banner = 0
-let g:netrw_liststyle = 3
-
 " VimWiki
 let g:vimwiki_list = [{
       \ 'path': '~/vimwiki/',
@@ -70,10 +67,9 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-vinegar'
 Plug 'airblade/vim-gitgutter'
-Plug 'jiangmiao/auto-pairs'
 Plug 'sheerun/vim-polyglot'
-Plug 'Donaldttt/fuzzyy'
 Plug 'vimwiki/vimwiki'
 
 " LSP

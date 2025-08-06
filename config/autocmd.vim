@@ -1,4 +1,9 @@
 " ------------------------------
+" Improved vimgrep
+" ------------------------------
+command! -nargs=+ VGrep execute 'vimgrep /'.<q-args>.'/ **' | copen
+
+" ------------------------------
 " Cursor shape in terminal Vim
 " ------------------------------
 if !has('nvim')

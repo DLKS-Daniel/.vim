@@ -10,6 +10,11 @@ let mapleader = " "
 nnoremap <leader>s :e #<CR>           " Reopen last file
 nnoremap <leader>S :sf<CR>            " Split + open file
 nnoremap <leader>q :bdelete<CR>       " Close current buffer
+nnoremap <leader><leader> :ls<Cr>:b<Space>
+nnoremap <C-l> :bnext<CR>
+nnoremap <C-h> :bprev<CR>
+autocmd FileType qf nnoremap <buffer> <C-n> :cnext<CR><C-w>w
+autocmd FileType qf nnoremap <buffer> <C-p> :cprev<CR><C-w>w
 
 " ------------------------------
 " Clipboard & Yank
@@ -39,18 +44,8 @@ nnoremap U <C-r>                      " Redo
 " ------------------------------
 nnoremap <leader>js mj:%!jq '.'<CR>'j " Format JSON using jq
 
-" ------------------------------
-" File Explorer (netrw)
-" ------------------------------
+" Map <leader>e to open netrw directory explorer like vinegar's '-'
 nnoremap <leader>e :Explore<CR>
-
-" ------------------------------
-" Fuzzyy Pickers
-" ------------------------------
-nnoremap <silent> <leader><leader> :FuzzyBuffers<CR>
-nnoremap <silent> <leader>f        :FuzzyFiles<CR>
-nnoremap <silent> <leader>h        :FuzzyHelp<CR>
-nnoremap <silent> <leader>g        :FuzzyGrep<CR>
 
 " ------------------------------
 " Vimrc Access
@@ -71,14 +66,16 @@ nnoremap <silent> <leader>dw :call StripTrailingWhitespaces()<CR>
 " ------------------------------
 " Git Integration (LazyGit/Git)
 " ------------------------------
-nnoremap <leader>lg :Git<CR>
+nnoremap <leader>g :Git<CR>
 
-" ------------------------------
-" Terminal
+" --------------- --------------
+" Terminal and cmd
 " ------------------------------
 nnoremap <leader>t :term<CR>
 if exists(':tnoremap')
     tnoremap <ESC> <C-\><C-n>                    " Exit terminal mode
     tnoremap <silent> <C-W>q <C-\><C-n>:q!<CR>    " Close terminal
 endif
-ndif
+
+nnoremap <C-f> q:
+nnoremap <C-w>e :enew<CR>
