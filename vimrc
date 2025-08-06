@@ -12,6 +12,7 @@ set background=dark
 " UI & Usability
 set number
 set cursorline
+set ruler
 set relativenumber
 set laststatus=2
 set signcolumn=yes
@@ -25,8 +26,8 @@ set timeoutlen=500
 set wildmode=longest:full,full
 set wildoptions=pum
 set clipboard+=unnamed,unnamedplus
-set backspace=indent,eol,start
-set matchpairs+=<:>,(:),[:],{:}
+set backspace=2
+set showmatch
 set foldlevel=99
 set hlsearch
 set incsearch
@@ -41,9 +42,13 @@ set expandtab
 set autoindent
 
 " Search & Completion
-set completeopt=menuone,longest
 autocmd FileType * setlocal omnifunc=syntaxcomplete#Complete
 autocmd FileType * setlocal omnifunc=lsp#complete
+
+set completeopt+=menuone
+set completeopt+=noselect
+set shortmess+=c
+
 
 " Misc
 set novisualbell
@@ -56,6 +61,8 @@ let g:vimwiki_list = [{
       \ 'syntax': 'markdown',
       \ 'ext': '.md'
       \ }]
+
+let g:mucomplete#enable_auto_at_startup = 1
 
 " ------------------------------
 " Plugins (via vim-plug)
@@ -74,6 +81,7 @@ Plug 'vimwiki/vimwiki'
 
 " LSP
 Plug 'prabirshrestha/vim-lsp'
+Plug 'lifepillar/vim-mucomplete'
 
 call plug#end()
 
