@@ -7,10 +7,12 @@ set nocompatible
 set encoding=utf-8
 set t_Co=256
 set background=dark
+set termguicolors
+set rtp+=~/.vim/colors/extras/vim
+colorscheme tokyonight-moon
 
 " UI & Usability
 set number
-set cursorline
 set ruler
 set relativenumber
 set laststatus=2
@@ -78,7 +80,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'sheerun/vim-polyglot'
 Plug 'vimwiki/vimwiki'
 Plug 'lifepillar/vim-mucomplete'
-Plug 'lunacookies/vim-colors-xcode'
 
 " LSP
 Plug 'prabirshrestha/vim-lsp'
@@ -92,7 +93,6 @@ source ~/.vim/config/io.vim
 source ~/.vim/config/autocmd.vim
 source ~/.vim/config/lspconfig.vim
 
-colorscheme xcode
 
 " ------------------------------
 " Mappings
