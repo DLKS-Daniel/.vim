@@ -1,45 +1,62 @@
-" --- Autocmds ---
+" ------------------------------
+" Cursor shape in terminal Vim
+" ------------------------------
 if !has('nvim')
-    " Change cursor shapes based on whether we are in insert mode,
-    let &t_SI = "\<esc>[6 q"
-    let &t_EI = "\<esc>[2 q"
+    " Set cursor shape for different modes (Insert, Replace)
+    let &t_SI = "\<Esc>[6 q"  " Insert mode - vertical bar
+    let &t_EI = "\<Esc>[2 q"  " Normal mode - block
     if exists('&t_SR')
-        let &t_SR = "\<esc>[4 q"
+        let &t_SR = "\<Esc>[4 q"  " Replace mode - underline
     endif
 endif
 
-" Do not use number and relative number for terminal inside nvim
+" ------------------------------
+" Terminal-specific settings
+" ------------------------------
 if exists('##TermOpen')
-    augroup term_settings
+    augroup terminal_settings
         autocmd!
-        autocmd TermOpen * setlocal norelativenumber nonumber
+        autocmd TermOpen * setlocal nonumber norelativenumber
         autocmd TermOpen * startinsert
     augroup END
 endif
 
-" Return to last edit position when opening a file
-augroup resume_edit_position
+" ------------------------------
+" Resume cursor position on reopen
+" ------------------------------
+augroup resume_cursor
     autocmd!
     autocmd BufReadPost *
-        \ if line("'\"") > 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+        \ if line("'\"") > 1 && line("'\"") <= line("$") && &filetype !~# 'commit'
         \ | execute "normal! g`\"zvzz"
         \ | endif
 augroup END
 
+" ------------------------------
+" Strip trailing whitespace
+" ------------------------------
 function! StripTrailingWhitespaces()
-  let l:save = winsaveview()
-  %s/\s\+$//e
-  call winrestview(l:save)
+    let l:save = winsaveview()
+    %s/\s\+$//e
+    call winrestview(l:save)
 endfunction
 
-" More accurate syntax highlighting? (see `:h syn-sync`)
-augroup accurate_syn_highlight
+" ------------------------------
+" Full syntax re-sync on buffer enter
+" ------------------------------
+augroup sync_syntax
     autocmd!
-    autocmd BufEnter * :syntax sync fromstart
+    autocmd BufEnter * syntax sync fromstart
 augroup END
 
-augroup number_toggle
+" ------------------------------
+" Dynamic relative number toggle
+" ------------------------------
+augroup toggle_relativenumber
     autocmd!
-    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &number | set relativenumber | endif
-    autocmd BufLeave,FocusLost,InsertEnter,WinLeave * if &number | set norelativenumber | endif
+    autocmd BufEnter,FocusGained,InsertLeave,WinEnter *
+        \ if &number | set relativenumber | endif
+
+    autocmd BufLeave,FocusLost,InsertEnter,WinLeave *
+        \ if &number | set norelativenumber | endif
 augroup END

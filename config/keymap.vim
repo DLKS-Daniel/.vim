@@ -1,54 +1,84 @@
-" --- Keymaps ---
-" Set space as leader key
+
+" ------------------------------
+" Leader Key
+" ------------------------------
 let mapleader = " "
 
-" nav
-nnoremap <leader>s :e #<CR>
-nnoremap <leader>S :sf #<CR>
+" ------------------------------
+" Navigation & Buffers
+" ------------------------------
+nnoremap <leader>s :e #<CR>           " Reopen last file
+nnoremap <leader>S :sf<CR>            " Split + open file
+nnoremap <leader>q :bdelete<CR>       " Close current buffer
 
-" Yank buffer
-nnoremap <leader>y :%y+<CR>
+" ------------------------------
+" Clipboard & Yank
+" ------------------------------
+nnoremap <leader>y :%y+<CR>           " Yank entire buffer to clipboard
 
-" Rm highlight
-nnoremap <Esc> :nohl<CR>
+" ------------------------------
+" Visuals & UI
+" ------------------------------
+nnoremap <Esc> :nohl<CR>              " Clear search highlight
 
+" ------------------------------
 " Indentation
+" ------------------------------
 nnoremap > >>g
 nnoremap < <<g
 xnoremap < <gv
 xnoremap > >gv
 
-" Undo
-nnoremap U <C-r>
+" ------------------------------
+" Undo & Redo
+" ------------------------------
+nnoremap U <C-r>                      " Redo
 
-" Format JSON
-nnoremap <leader>js mj:%!jq '.'<CR>'j
+" ------------------------------
+" JSON Formatting (requires jq)
+" ------------------------------
+nnoremap <leader>js mj:%!jq '.'<CR>'j " Format JSON using jq
 
-" Leader + e: Open netrw in a minimal way
+" ------------------------------
+" File Explorer (netrw)
+" ------------------------------
 nnoremap <leader>e :Explore<CR>
 
-" Pickers
-nnoremap <silent> <leader><leader> :FuzzyBuffers<cr>
-nnoremap <silent> <leader>f :FuzzyFiles<cr>
-nnoremap <silent> <leader>h :FuzzyHelp<cr>
-nnoremap <silent> <leader>g :FuzzyGrep<cr>
+" ------------------------------
+" Fuzzyy Pickers
+" ------------------------------
+nnoremap <silent> <leader><leader> :FuzzyBuffers<CR>
+nnoremap <silent> <leader>f        :FuzzyFiles<CR>
+nnoremap <silent> <leader>h        :FuzzyHelp<CR>
+nnoremap <silent> <leader>g        :FuzzyGrep<CR>
 
-" Vimrc
+" ------------------------------
+" Vimrc Access
+" ------------------------------
 nnoremap <leader>. :edit $MYVIMRC<CR>
-nnoremap <leader>r :so<CR>
+nnoremap <leader>r :source $MYVIMRC<CR>
 
-" Search in selected region
+" ------------------------------
+" Visual Mode Search in Region
+" ------------------------------
 vnoremap / :<C-U>call feedkeys('/\%>'.(line("'<")-1).'l\%<'.(line("'>")+1)."l")<CR>
 
-" Remove trailing whitespace characters
+" ------------------------------
+" Trailing Whitespace Cleanup
+" ------------------------------
 nnoremap <silent> <leader>dw :call StripTrailingWhitespaces()<CR>
 
-" Lazygit
+" ------------------------------
+" Git Integration (LazyGit/Git)
+" ------------------------------
 nnoremap <leader>lg :Git<CR>
 
-" Term
+" ------------------------------
+" Terminal
+" ------------------------------
 nnoremap <leader>t :term<CR>
 if exists(':tnoremap')
-    tnoremap <ESC>   <C-\><C-n>
-    tnoremap <silent> <C-W>q <C-\><C-n>:q!<CR>
+    tnoremap <ESC> <C-\><C-n>                    " Exit terminal mode
+    tnoremap <silent> <C-W>q <C-\><C-n>:q!<CR>    " Close terminal
 endif
+ndif
