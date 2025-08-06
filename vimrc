@@ -3,7 +3,6 @@
 " ------------------------------
 syntax on
 filetype plugin indent on
-colorscheme desert
 set nocompatible
 set encoding=utf-8
 set t_Co=256
@@ -78,10 +77,11 @@ Plug 'tpope/vim-vinegar'
 Plug 'airblade/vim-gitgutter'
 Plug 'sheerun/vim-polyglot'
 Plug 'vimwiki/vimwiki'
+Plug 'lifepillar/vim-mucomplete'
+Plug 'lunacookies/vim-colors-xcode'
 
 " LSP
 Plug 'prabirshrestha/vim-lsp'
-Plug 'lifepillar/vim-mucomplete'
 
 call plug#end()
 
@@ -89,9 +89,61 @@ call plug#end()
 " Custom Configs & Runtime
 " ------------------------------
 source ~/.vim/config/io.vim
-source ~/.vim/config/keymap.vim
 source ~/.vim/config/autocmd.vim
 source ~/.vim/config/lspconfig.vim
 
-runtime! macros/matchit.vim
-runtime! ftplugin/man.vim
+colorscheme xcode
+
+" ------------------------------
+" Mappings
+" ------------------------------
+let mapleader = " "
+
+" Navigation & Buffers
+nnoremap <leader>s :e #<CR>           " Reopen last file
+nnoremap <leader>S :sf<CR>            " Split + open file
+nnoremap <leader>q :bdelete<CR>       " Close current buffer
+nnoremap <leader><leader> :ls<Cr>:b<Space>
+nnoremap <C-l> :bnext<CR>
+nnoremap <C-h> :bprev<CR>
+autocmd FileType qf nnoremap <buffer> <C-n> :cnext<CR><C-w>w
+autocmd FileType qf nnoremap <buffer> <C-p> :cprev<CR><C-w>w
+
+" Clipboard & Yank
+nnoremap <leader>y :%y+<CR>           " Yank entire buffer to clipboard
+
+" Visuals & UI
+nnoremap <Esc> :nohl<CR>              " Clear search highlight
+
+" Indentation
+nnoremap > >>g
+nnoremap < <<g
+xnoremap < <gv
+xnoremap > >gv
+
+" Undo & Redo
+nnoremap U <C-r>                      " Redo
+
+" JSON Formatting (requires jq)
+nnoremap <leader>js mj:%!jq '.'<CR>'j " Format JSON using jq
+
+" Map <leader>e to open netrw directory explorer like vinegar's '-'
+nnoremap <leader>e :Explore<CR>
+
+" Vimrc Access
+nnoremap <leader>. :edit $MYVIMRC<CR>
+nnoremap <leader>r :source $MYVIMRC<CR>
+
+" Visual Mode Search in Region
+vnoremap / :<C-U>call feedkeys('/\%>'.(line("'<")-1).'l\%<'.(line("'>")+1)."l")<CR>
+
+" Trailing Whitespace Cleanup
+nnoremap <silent> <leader>dw :call StripTrailingWhitespaces()<CR>
+
+" Git Integration (LazyGit/Git)
+nnoremap <leader>g :Git<CR>
+
+" Terminal shell and cmd window
+nnoremap <F1> :shell<CR>
+nnoremap <C-f> q:
+nnoremap <C-w>e :enew<CR>
