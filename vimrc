@@ -22,8 +22,6 @@ set splitright
 set mouse=a
 set nowrap
 set pumheight=10
-set updatetime=800
-set timeoutlen=500
 set wildmode=longest:full,full
 set wildoptions=pum
 set clipboard+=unnamed,unnamedplus
@@ -147,3 +145,129 @@ nnoremap <leader>g :Git<CR>
 nnoremap <F1> :shell<CR>
 nnoremap <C-f> q:
 nnoremap <C-w>e :enew<CR>
+
+" ------------------------------
+" LSP Server Setup
+" ------------------------------
+" Python LSP: install via `pip install python-lsp-server`
+if executable('pylsp')
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'pylsp',
+        \ 'cmd': {server_info->['pylsp']},
+        \ 'allowlist': ['python'],
+        \ })
+endif
+
+" ------------------------------
+" LSP Key Mappings
+" ------------------------------
+nnoremap <silent> gd   :LspDefinition<CR>
+nnoremap <silent> gD   :LspDeclaration<CR>
+nnoremap <silent> gi   :LspImplementation<CR>
+nnoremap <silent> gT   :LspTypeDefinition<CR>
+nnoremap <silent> K    :LspHover<CR>
+nnoremap <silent> <C-k> :LspSignatureHelp<CR>
+nnoremap <silent> gR   :LspReferences<CR>
+nnoremap <silent> grn  :LspRename<CR>
+nnoremap <silent> gf   :LspDocumentFormat<CR>
+nnoremap <silent> ga   :LspCodeAction<CR>
+
+" ------------------------------
+" Viminfo: File history, registers, etc.
+" ------------------------------
+set viminfo='50,f1,<500,n~/.vim/viminfo  " Save file marks, registers, buffer list
+
+" Ensure directory exists for additional history (custom location)
+function! EnsureVimhisExists()
+    let vimhis_path = expand('~/.vim/history')
+    if !isdirectory(vimhis_path)
+        call mkdir(vimhis_path, 'p')
+        echo "Created directory: " . vimhis_path
+    endif
+endfunction
+call EnsureVimhisExists()
+
+" ------------------------------
+" Persistent Undo
+" ------------------------------
+if !has('nvim')
+    if !isdirectory($HOME . '/.local/vim/undo')
+        call mkdir($HOME . '/.local/vim/undo', 'p', 0700)
+    endif
+    set undodir=~/.local/vim/undo
+endif
+set undofile    " Enable persistent undo
+
+" ------------------------------
+" File Safety: Disable backup/swap
+" ------------------------------
+set noswapfile
+set nobackup
+
+" ------------------------------
+" Improved vimgrep
+" ------------------------------
+command! -nargs=+ VGrep execute 'vimgrep /'.<q-args>.'/ **' | copen
+
+" ------------------------------
+" Cursor shape in terminal Vim
+" ------------------------------
+if !has('nvim')
+    " Set cursor shape for different modes (Insert, Replace)
+    let &t_SI = "\<Esc>[6 q"  " Insert mode - vertical bar
+    let &t_EI = "\<Esc>[2 q"  " Normal mode - block
+    if exists('&t_SR')
+        let &t_SR = "\<Esc>[4 q"  " Replace mode - underline
+    endif
+endif
+
+" ------------------------------
+" Terminal-specific settings
+" ------------------------------
+if exists('##TermOpen')
+    augroup terminal_settings
+        autocmd!
+        autocmd TermOpen * setlocal nonumber norelativenumber
+        autocmd TermOpen * startinsert
+    augroup END
+endif
+
+" ------------------------------
+" Resume cursor position on reopen
+" ------------------------------
+augroup resume_cursor
+    autocmd!
+    autocmd BufReadPost *
+        \ if line("'\"") > 1 && line("'\"") <= line("$") && &filetype !~# 'commit'
+        \ | execute "normal! g`\"zvzz"
+        \ | endif
+augroup END
+
+" ------------------------------
+" Strip trailing whitespace
+" ------------------------------
+function! StripTrailingWhitespaces()
+    let l:save = winsaveview()
+    %s/\s\+$//e
+    call winrestview(l:save)
+endfunction
+
+" ------------------------------
+" Full syntax re-sync on buffer enter
+" ------------------------------
+augroup sync_syntax
+    autocmd!
+    autocmd BufEnter * syntax sync fromstart
+augroup END
+
+" ------------------------------
+" Dynamic relative number toggle
+" ------------------------------
+augroup toggle_relativenumber
+    autocmd!
+    autocmd BufEnter,FocusGained,InsertLeave,WinEnter *
+        \ if &number | set relativenumber | endif
+
+    autocmd BufLeave,FocusLost,InsertEnter,WinLeave *
+        \ if &number | set norelativenumber | endif
+augroup END
