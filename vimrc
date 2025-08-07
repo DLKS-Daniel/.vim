@@ -23,67 +23,69 @@ call plug#end()
 " ------------------------------
 " General Settings
 " ------------------------------
-" Encoding & File Handling
+" --- Encoding & Files ---
 set encoding=utf-8
 set fileencoding=utf-8
 set undofile
 set noswapfile
 set nobackup
 
-" Display & UI
-set t_Co=256
-set termguicolors
-set background=dark
+" --- Display & UI ---
 set number
 set relativenumber
 set ruler
 set laststatus=2
 set signcolumn=yes
 set nowrap
-set pumheight=10
+set scrolloff=15
 set showmatch
 set foldlevel=99
+set pumheight=10
 
-" Window Splitting & Mouse
+" --- Splits & Mouse ---
 set splitbelow
 set splitright
 set mouse=a
 
-" Search
+" --- Search ---
 set hlsearch
 set incsearch
 set ignorecase
 set smartcase
 
-" Completion & Command-line
+" --- Command-line & Wildmenu ---
 set completeopt=menuone,noselect
 set wildmode=longest:full,full
 set wildoptions=pum
+set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
-" Clipboard
+" --- Clipboard ---
 set clipboard+=unnamed,unnamedplus
 
-" Editing Behavior
+" --- Editing Behavior ---
 set backspace=indent,eol,start
 set hidden
 
-" Performance & Feedback
+" --- Performance ---
 set lazyredraw
 set shortmess+=c
 set novisualbell
 set noerrorbells
 set t_vb=
 
-" Syntax & Filetypes
+" --- Syntax & Filetypes ---
 syntax on
 filetype plugin indent on
 
-" Colorscheme
+" --- Colorscheme ---
+set t_Co=256
+set termguicolors
+set background=dark
 set rtp+=~/.vim/colors/extras/vim
 colorscheme tokyonight-moon
 
 " ------------------------------
-" Tab & Indentation
+" Tabs & Indentation
 " ------------------------------
 set tabstop=4
 set shiftwidth=4
@@ -91,26 +93,29 @@ set expandtab
 set autoindent
 
 " ------------------------------
-" Plugin Configs
+" Plugin Configurations
 " ------------------------------
+" --- VimWiki ---
 let g:vimwiki_list = [{
       \ 'path': '~/vimwiki/',
       \ 'syntax': 'markdown',
       \ 'ext': '.md'
       \ }]
-autocmd FileType * setlocal omnifunc=lsp#complete
+
+" --- mucomplete ---
 let g:mucomplete#enable_auto_at_startup = 1
-let g:mucomplete#chains = {
-\ 'default' : ['omni', 'keyn'],
-\}
+let g:mucomplete#chains = { 'default' : ['omni', 'keyn'] }
+
+" --- LSP ---
 let g:lsp_semantic_enabled = 1
+autocmd FileType * setlocal omnifunc=lsp#complete
 
 " ------------------------------
 " Key Mappings
 " ------------------------------
 let mapleader = " "
 
-" File & Buffer Navigation
+" --- File & Buffer Navigation ---
 nnoremap <leader>s :e #<CR>
 nnoremap <leader>S :sf<CR>
 nnoremap <leader>q :bdelete<CR>
@@ -119,7 +124,7 @@ nnoremap <C-l> :bnext<CR>
 nnoremap <C-h> :bprev<CR>
 nnoremap <C-w>e :enew<CR>
 
-" Editing
+" --- Editing ---
 nnoremap <leader>y :%y+<CR>
 nnoremap <leader>dw :call StripTrailingWhitespaces()<CR>
 nnoremap U <C-r>
@@ -130,13 +135,22 @@ xnoremap > >gv
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
-" View & UI
+" --- View & UI ---
 nnoremap <Esc> :nohlsearch<Bar>:echo<CR>
 nnoremap <leader>e :Explore<CR>
 nnoremap <leader>. :edit $MYVIMRC<CR>
 nnoremap <leader>r :source $MYVIMRC<CR>
 
-" Search & Grep (Ripgrep)
+" --- Git ---
+nnoremap <leader>gg :Git<CR>
+nnoremap <leader>gl :Git log<CR><C-w>T
+
+" --- Terminal / Run ---
+nnoremap <C-f> q:
+nnoremap <leader>t :shell<CR>
+nnoremap <leader>p :!uv run %<CR>
+
+" --- Search (ripgrep) ---
 if executable('rg')
     command! -nargs=+ Rg call s:Ripgrep(<q-args>)
     function! s:Ripgrep(query)
@@ -147,10 +161,7 @@ if executable('rg')
     nnoremap <leader>fg :Rg<Space>
 endif
 
-" Git
-nnoremap <leader>g :Git<CR>
-
-" Formatting
+" --- Formatting ---
 if executable('jq')
     function! FormatJSONWithJq()
         let l:view = winsaveview()
@@ -169,35 +180,32 @@ if executable('black')
     autocmd FileType python nnoremap <buffer> <leader>js :call FormatPythonWithBlack()<CR>
 endif
 
+" --- Build ---
 autocmd FileType python compiler pylint
 autocmd FileType json compiler jsonlint
-autocmd FileType vimwiki abbreviate cb - [ ]
 autocmd FileType python,json nnoremap <buffer> <leader>l :make<CR>:copen<CR>
 
+" --- Vimwiki Shortcuts ---
+autocmd FileType vimwiki abbreviate cb - [ ]
 
-" Terminal / Run
-nnoremap <C-f> q:
-nnoremap <leader>t :shell<CR>
-nnoremap <leader>p :!uv run %<CR>
-
-" Visual Mode Search in Range
+" --- Visual Range Search ---
 vnoremap / :<C-U>call feedkeys('/\%>'.(line("'<")-1).'l\%<'.(line("'>")+1)."l")<CR>
 
-" LSP Keymaps (Neovim standard style)
-nnoremap <silent> gd :LspDefinition<CR>
-nnoremap <silent> gD :LspDeclaration<CR>
-nnoremap <silent> gi :LspImplementation<CR>
-nnoremap <silent> gr :LspReferences<CR>
-nnoremap <silent> grn :LspRename<CR>
-nnoremap <silent> K :LspHover<CR>
+" --- LSP Keybindings ---
+nnoremap <silent> gd   :LspDefinition<CR>
+nnoremap <silent> gD   :LspDeclaration<CR>
+nnoremap <silent> gi   :LspImplementation<CR>
+nnoremap <silent> gr   :LspReferences<CR>
+nnoremap <silent> grn  :LspRename<CR>
+nnoremap <silent> K    :LspHover<CR>
 nnoremap <silent> <C-k> :LspSignatureHelp<CR>
-nnoremap <silent> <leader>ca :LspCodeAction<CR>
+nnoremap <silent> gca  :LspCodeAction<CR>
 nnoremap <silent> <leader>f :LspDocumentFormat<CR>
 
-" Diagnostics
-nnoremap <silent> gl  :LspDocumentDiagnostics<CR>
-nnoremap <silent> [d  :LspPreviousDiagnostic<CR>
-nnoremap <silent> ]d  :LspNextDiagnostic<CR>
+" --- LSP Diagnostics ---
+nnoremap <silent> gl   :LspDocumentDiagnostics<CR>
+nnoremap <silent> [d   :LspPreviousDiagnostic<CR>
+nnoremap <silent> ]d   :LspNextDiagnostic<CR>
 
 " ------------------------------
 " Functions
@@ -222,10 +230,8 @@ call EnsureVimhisExists()
 " ------------------------------
 augroup toggle_relativenumber
     autocmd!
-    autocmd BufEnter,FocusGained,InsertLeave,WinEnter *
-        \ if &number | set relativenumber | endif
-    autocmd BufLeave,FocusLost,InsertEnter,WinLeave *
-        \ if &number | set norelativenumber | endif
+    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &number | set relativenumber | endif
+    autocmd BufLeave,FocusLost,InsertEnter,WinLeave * if &number | set norelativenumber | endif
 augroup END
 
 augroup resume_cursor
