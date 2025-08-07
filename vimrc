@@ -98,9 +98,11 @@ let g:vimwiki_list = [{
       \ 'syntax': 'markdown',
       \ 'ext': '.md'
       \ }]
-let g:mucomplete#enable_auto_at_startup = 1
-
 autocmd FileType * setlocal omnifunc=lsp#complete
+let g:mucomplete#enable_auto_at_startup = 1
+let g:mucomplete#chains = {
+\ 'default' : ['omni', 'keyn'],
+\}
 let g:lsp_semantic_enabled = 1
 
 " ------------------------------
@@ -166,6 +168,12 @@ if executable('black')
     endfunction
     autocmd FileType python nnoremap <buffer> <leader>js :call FormatPythonWithBlack()<CR>
 endif
+
+autocmd FileType python compiler pylint
+autocmd FileType json compiler jsonlint
+autocmd FileType vimwiki abbreviate cb - [ ]
+autocmd FileType python,json nnoremap <buffer> <leader>l :make<CR>:copen<CR>
+
 
 " Terminal / Run
 nnoremap <C-f> q:
