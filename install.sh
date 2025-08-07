@@ -29,4 +29,4 @@ else
 fi
 
 echo "Installing black, pylsp, and mypy with uv..."
-uv tool install black pylsp mypy
+uv tool install black pylsp pylint
