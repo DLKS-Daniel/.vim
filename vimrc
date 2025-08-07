@@ -29,7 +29,7 @@ set fileencoding=utf-8
 set undofile
 set noswapfile
 set nobackup
-set viminfo='50,f1,<500,n~/.vim/viminfo
+
 " Display & UI
 set t_Co=256
 set termguicolors
@@ -43,33 +43,41 @@ set nowrap
 set pumheight=10
 set showmatch
 set foldlevel=99
+
 " Window Splitting & Mouse
 set splitbelow
 set splitright
 set mouse=a
+
 " Search
 set hlsearch
 set incsearch
 set ignorecase
 set smartcase
+
 " Completion & Command-line
 set completeopt=menuone,noselect
 set wildmode=longest:full,full
 set wildoptions=pum
+
 " Clipboard
 set clipboard+=unnamed,unnamedplus
+
 " Editing Behavior
 set backspace=indent,eol,start
 set hidden
+
 " Performance & Feedback
 set lazyredraw
 set shortmess+=c
 set novisualbell
 set noerrorbells
 set t_vb=
+
 " Syntax & Filetypes
 syntax on
 filetype plugin indent on
+
 " Colorscheme
 set rtp+=~/.vim/colors/extras/vim
 colorscheme tokyonight-moon
