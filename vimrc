@@ -23,8 +23,14 @@ call plug#end()
 " ------------------------------
 " General Settings
 " ------------------------------
+" Encoding & File Handling
 set encoding=utf-8
 set fileencoding=utf-8
+set undofile
+set noswapfile
+set nobackup
+set viminfo='50,f1,<500,n~/.vim/viminfo
+" Display & UI
 set t_Co=256
 set termguicolors
 set background=dark
@@ -33,37 +39,37 @@ set relativenumber
 set ruler
 set laststatus=2
 set signcolumn=yes
+set nowrap
+set pumheight=10
+set showmatch
+set foldlevel=99
+" Window Splitting & Mouse
 set splitbelow
 set splitright
 set mouse=a
-set nowrap
-set pumheight=10
-set wildmode=longest:full,full
-set wildoptions=pum
-set clipboard+=unnamed,unnamedplus
-set backspace=indent,eol,start
-set showmatch
-set foldlevel=99
+" Search
 set hlsearch
 set incsearch
 set ignorecase
 set smartcase
-set hidden
+" Completion & Command-line
 set completeopt=menuone,noselect
-set shortmess+=c
+set wildmode=longest:full,full
+set wildoptions=pum
+" Clipboard
+set clipboard+=unnamed,unnamedplus
+" Editing Behavior
+set backspace=indent,eol,start
+set hidden
+" Performance & Feedback
 set lazyredraw
+set shortmess+=c
 set novisualbell
 set noerrorbells
 set t_vb=
-set undofile
-set noswapfile
-set nobackup
-set viminfo='50,f1,<500,n~/.vim/viminfo
-
 " Syntax & Filetypes
 syntax on
 filetype plugin indent on
-
 " Colorscheme
 set rtp+=~/.vim/colors/extras/vim
 colorscheme tokyonight-moon
@@ -231,7 +237,7 @@ augroup sync_syntax
 augroup END
 
 " ------------------------------
-" Persistent Undo Directory
+" File I/O
 " ------------------------------
 if !has('nvim')
     if !isdirectory($HOME . '/.local/vim/undo')
@@ -239,3 +245,5 @@ if !has('nvim')
     endif
     set undodir=~/.local/vim/undo
 endif
+
+set viminfo='50,f1,<500,n~/.vim/viminfo
