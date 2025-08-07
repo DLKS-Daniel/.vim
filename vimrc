@@ -4,14 +4,14 @@
 call plug#begin('~/.vim/plugged')
 
 " General Utilities
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-vinegar'
-Plug 'airblade/vim-gitgutter'
-Plug 'sheerun/vim-polyglot'
 Plug 'vimwiki/vimwiki'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'sheerun/vim-polyglot'
+Plug 'airblade/vim-gitgutter'
 Plug 'lifepillar/vim-mucomplete'
 
 " LSP
@@ -24,6 +24,7 @@ call plug#end()
 " General Settings
 " ------------------------------
 set encoding=utf-8
+set fileencoding=utf-8
 set t_Co=256
 set termguicolors
 set background=dark
@@ -50,6 +51,7 @@ set smartcase
 set hidden
 set completeopt=menuone,noselect
 set shortmess+=c
+set lazyredraw
 set novisualbell
 set noerrorbells
 set t_vb=
@@ -109,6 +111,8 @@ nnoremap > >>g
 nnoremap < <<g
 xnoremap < <gv
 xnoremap > >gv
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
 " View & UI
 nnoremap <Esc> :nohlsearch<Bar>:echo<CR>
@@ -124,11 +128,11 @@ if executable('rg')
         cexpr system(l:rg_cmd)
         copen
     endfunction
-    nnoremap <leader>g :Rg<Space>
+    nnoremap <leader>fg :Rg<Space>
 endif
 
 " Git
-nnoremap <leader>gg :Git<CR>
+nnoremap <leader>g :Git<CR>
 
 " Formatting
 if executable('jq')
@@ -143,30 +147,30 @@ endif
 if executable('black')
     function! FormatPythonWithBlack()
         let l:view = winsaveview()
-        silent execute '!black %'
+        execute '!black %'
         call winrestview(l:view)
     endfunction
-    autocmd FileType python nnoremap <buffer> <leader>bf :call FormatPythonWithBlack()<CR>
+    autocmd FileType python nnoremap <buffer> <leader>js :call FormatPythonWithBlack()<CR>
 endif
 
 " Terminal / Run
-nnoremap <leader>t :terminal<CR>
 nnoremap <C-f> q:
-nnoremap <leader>p !uv run %<CR>
+nnoremap <leader>t :shell<CR>
+nnoremap <leader>p :!uv run %<CR>
 
 " Visual Mode Search in Range
 vnoremap / :<C-U>call feedkeys('/\%>'.(line("'<")-1).'l\%<'.(line("'>")+1)."l")<CR>
 
 " LSP Keymaps (Neovim standard style)
-nnoremap <silent> gd   :LspDefinition<CR>
-nnoremap <silent> gD   :LspDeclaration<CR>
-nnoremap <silent> gi   :LspImplementation<CR>
-nnoremap <silent> gr   :LspReferences<CR>
-nnoremap <silent> K    :LspHover<CR>
+nnoremap <silent> gd :LspDefinition<CR>
+nnoremap <silent> gD :LspDeclaration<CR>
+nnoremap <silent> gi :LspImplementation<CR>
+nnoremap <silent> gr :LspReferences<CR>
+nnoremap <silent> grn :LspRename<CR>
+nnoremap <silent> K :LspHover<CR>
 nnoremap <silent> <C-k> :LspSignatureHelp<CR>
-nnoremap <silent> <leader>rn :LspRename<CR>
 nnoremap <silent> <leader>ca :LspCodeAction<CR>
-nnoremap <silent> <leader>f  :LspDocumentFormat<CR>
+nnoremap <silent> <leader>f :LspDocumentFormat<CR>
 
 " Diagnostics
 nnoremap <silent> gl  :LspDocumentDiagnostics<CR>
@@ -190,12 +194,6 @@ function! EnsureVimhisExists()
     endif
 endfunction
 call EnsureVimhisExists()
-
-function! FormatJSONWithJq()
-    let l:view = winsaveview()
-    silent %!jq '.'
-    call winrestview(l:view)
-endfunction
 
 " ------------------------------
 " Autocommands
