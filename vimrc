@@ -7,22 +7,14 @@
 " ------------------------------
 call plug#begin('~/.vim/plugged')
 
-
-" --- Git Integration ---
-Plug 'tpope/vim-fugitive'
-
-" --- Personal Productivity ---
 Plug 'vimwiki/vimwiki'
-
-" --- General Utilities ---
-Plug 'airblade/vim-gitgutter'
-Plug 'kien/ctrlp.vim'
-Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-vinegar'
-Plug 'mbbill/undotree'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'kien/ctrlp.vim'
+Plug 'mbbill/undotree'
 
 call plug#end()
 
@@ -110,7 +102,6 @@ set shiftwidth=4
 set expandtab
 set autoindent
 
-
 " ==========================================================
 " PLUGIN CONFIGURATIONS
 " ==========================================================
@@ -163,7 +154,6 @@ let mapleader = "\<Space>"
 
 " --- File & Buffer ---
 nnoremap <leader>q :call ConfirmBdelete()<CR>
-nnoremap <leader><leader> :ls<CR>
 nnoremap <C-l> :bnext<CR>
 nnoremap <C-h> :bprev<CR>
 nnoremap <C-w>e :enew<CR>
@@ -193,8 +183,6 @@ vnoremap K :m '<-2<CR>gv=gv
 
 " --- Misc ---
 nnoremap <Esc> :nohlsearch<Bar>:echo<CR>
-nnoremap <C-f> q:
-nnoremap <leader>t :shell<CR>
 nnoremap <leader>u :UndotreeToggle<CR>
 
 " --- Python Specific ---
@@ -203,22 +191,7 @@ augroup PythonUvRun
   autocmd FileType python nnoremap <buffer> <leader>p :!uv run %<CR>
 augroup END
 
-" --- Search (ripgrep) ---
-if executable('rg')
-    command! -nargs=+ Rg call s:Ripgrep(<q-args>)
-    function! s:Ripgrep(query)
-        let l:rg_cmd = 'rg --vimgrep ' . shellescape(a:query)
-        cexpr system(l:rg_cmd)
-        copen
-    endfunction
-    nnoremap <leader>fg :Rg<Space>
-endif
-
-" --- Vimwiki Checkbox Shortcut ---
 autocmd FileType vimwiki abbreviate cb - [ ]
-
-" --- Visual Range Search ---
-vnoremap / :<C-U>call feedkeys('/\%>'.(line("'<")-1).'l\%<'.(line("'>")+1)."l")<CR>
 
 " ==========================================================
 " FUNCTIONS
@@ -242,24 +215,6 @@ endfunction
 " AUTOCOMMAND GROUPS
 " ==========================================================
 
-" Toggle relative number depending on context
-augroup toggle_relativenumber
-    autocmd!
-    autocmd BufEnter,FocusGained,InsertLeave,WinEnter *
-        \ if &buftype !=# 'quickfix' && &number | set relativenumber | endif
-    autocmd BufLeave,FocusLost,InsertEnter,WinLeave *
-        \ if &buftype !=# 'quickfix' && &number | set norelativenumber | endif
-augroup END
-
-" Restore cursor to last location
-augroup resume_cursor
-    autocmd!
-    autocmd BufReadPost *
-        \ if line("'\"") > 1 && line("'\"") <= line("$") && &filetype !~# 'commit'
-        \ | execute "normal! g`\"zvzz"
-        \ | endif
-augroup END
-
 " Strip whitespace on save
 augroup strip_whitespace
     autocmd!
@@ -272,21 +227,6 @@ augroup qf_mappings
     autocmd FileType qf nnoremap <buffer> <C-n> :cnext<CR><C-w>w
     autocmd FileType qf nnoremap <buffer> <C-p> :cprev<CR><C-w>w
     autocmd FileType qf nnoremap <buffer> o <CR>
-augroup END
-
-" Python compiler setup
-augroup python_compiler_toggle
-    autocmd!
-    autocmd FileType python compiler pylint
-    autocmd FileType python nnoremap <buffer> <silent> <leader>l :make %<CR>:copen<CR>
-    autocmd FileType python nnoremap <buffer> <silent> <leader>L :call TogglePythonCompiler()<CR>
-augroup END
-
-" JSON compiler
-augroup json_compiler
-    autocmd!
-    autocmd FileType json compiler jsonlint
-    autocmd FileType json nnoremap <buffer> <silent> <leader>l :make %<CR>:copen<CR>
 augroup END
 
 " Disable default Vim message group
