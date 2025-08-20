@@ -6,3 +6,4 @@ viminfo
 plugged/*
 autoload/*
 history/*
+undodir/*

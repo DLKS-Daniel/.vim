@@ -28,5 +28,5 @@ else
     echo "vim-plug already installed."
 fi
 
-echo "Installing black, pylsp, and mypy with uv..."
-uv tool install black pylsp pylint
+echo "Installing black, pylsp, pylint and mypy with uv tool install..."
+uv tool install black python-lsp-server pylint mypy
