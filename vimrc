@@ -22,13 +22,6 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-vinegar'
 Plug 'mbbill/undotree'
-Plug 'airblade/vim-gitgutter'
-Plug 'kien/ctrlp.vim'
-Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-vinegar'
-Plug 'mbbill/undotree'
 Plug 'tpope/vim-surround'
 
 call plug#end()
@@ -74,7 +67,7 @@ set wildoptions=pum
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
 " --- Clipboard ---
-set clipboard+=unnamed,unnamedplus
+set clipboard=unnamedplus
 
 " --- Behavior ---
 set backspace=indent,eol,start
