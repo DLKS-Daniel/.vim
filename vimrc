@@ -59,7 +59,7 @@ set wildoptions=pum
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
 " --- Clipboard ---
-set clipboard=unnamedplus
+set clipboard=unnamed
 
 " --- Behavior ---
 set backspace=indent,eol,start
@@ -152,16 +152,19 @@ endfunction
 " --- Leader ---
 let mapleader = "\<Space>"
 
+
 " --- File & Buffer ---
+nnoremap <leader><leader> :CtrlPBuffer<CR>
+nnoremap <leader>f :CtrlP<CR>
+nnoremap <leader>r :CtrlPMRUFiles<CR>
 nnoremap <leader>q :call ConfirmBdelete()<CR>
+nnoremap <leader>o :copen<CR>
 nnoremap <C-l> :bnext<CR>
 nnoremap <C-h> :bprev<CR>
 nnoremap <C-w>e :enew<CR>
 nnoremap <C-w>Q :qa<CR>
 nnoremap <leader>e :Explore<CR>
 nnoremap <leader>. :edit $MYVIMRC<CR>
-nnoremap <leader>r :source $MYVIMRC<CR>
-nnoremap <leader>o :copen<CR>
 nnoremap <F2> :windo set ft=json<CR>
 
 " --- Git ---
