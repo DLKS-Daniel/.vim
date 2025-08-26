@@ -13,11 +13,30 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
+Plug 'jiangmiao/auto-pairs'
 Plug 'kien/ctrlp.vim'
 Plug 'mbbill/undotree'
+Plug 'airblade/vim-gitgutter'
+
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'  " Optional, for easier setup
 
 call plug#end()
 
+autocmd FileType python setlocal omnifunc=lsp#complete
+
+inoremap <C-n> <C-x><C-o>
+augroup python_lsp_mappings
+  autocmd!
+  autocmd FileType python nnoremap <buffer> <silent> gd  :LspDefinition<CR>
+  autocmd FileType python nnoremap <buffer> <silent> gr  :LspReferences<CR>
+  autocmd FileType python nnoremap <buffer> <silent> gi  :LspImplementation<CR>
+  autocmd FileType python nnoremap <buffer> <silent> K   :LspHover<CR>
+  autocmd FileType python nnoremap <buffer> <silent> grn :LspRename<CR>
+  autocmd FileType python nnoremap <buffer> <silent> gca :LspCodeAction<CR>
+  autocmd FileType python nnoremap <buffer> <silent> [d  :LspPreviousDiagnostic<CR>
+  autocmd FileType python nnoremap <buffer> <silent> ]d  :LspNextDiagnostic<CR>
+augroup END
 
 " ==========================================================
 " GENERAL SETTINGS
@@ -78,7 +97,7 @@ filetype plugin indent on
 " --- Colorscheme ---
 set termguicolors
 set background=dark
-colorscheme desert
+colorscheme evening
 
 " --- Data files ---
 if has('persistent_undo')
@@ -133,25 +152,12 @@ if executable('black')
     autocmd FileType python nnoremap <buffer> <leader>js :call FormatPythonWithBlack()<CR>
 endif
 
-" --- Python Build & Linting ---
-let g:python_current_compiler = 'pylint'
-function! TogglePythonCompiler()
-    if g:python_current_compiler ==# 'pylint'
-        let g:python_current_compiler = 'mypy'
-    else
-        let g:python_current_compiler = 'pylint'
-    endif
-    execute 'compiler ' . g:python_current_compiler
-    echo 'Switched to ' . g:python_current_compiler
-endfunction
-
 " ==========================================================
 " KEY MAPPINGS
 " ==========================================================
 
 " --- Leader ---
 let mapleader = "\<Space>"
-
 
 " --- File & Buffer ---
 nnoremap <leader><leader> :CtrlPBuffer<CR>
