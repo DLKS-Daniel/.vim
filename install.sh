@@ -14,11 +14,6 @@ if ! command_exists uv; then
     winget install --id=astral-sh.uv -e --silent
 fi
 
-if ! command_exists rg; then
-    echo "ripgrep (rg) not found. Installing ripgrep using winget..."
-    winget install --id=BurntSushi.Ripgrep -e --silent
-fi
-
 VIM_PLUG_PATH="$HOME/.vim/autoload/plug.vim"
 if [ ! -f "$VIM_PLUG_PATH" ]; then
     echo "Downloading vim-plug..."

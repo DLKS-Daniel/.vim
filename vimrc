@@ -1,129 +1,136 @@
-" =================
-" Vim Configuration
-" =================
-
 " ------------------------------
 " Plugin Manager (vim-plug)
 " ------------------------------
 call plug#begin('~/.vim/plugged')
 
-Plug 'vimwiki/vimwiki'
+" --- Core Productivity ---
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
-Plug 'jiangmiao/auto-pairs'
-Plug 'kien/ctrlp.vim'
-Plug 'mbbill/undotree'
+Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-eunuch'
+Plug 'DLKS-Daniel/ctrlp.vim'
+Plug 'machakann/vim-highlightedyank'
 Plug 'airblade/vim-gitgutter'
-
 Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings'  " Optional, for easier setup
+Plug 'tpope/vim-fugitive', { 'on': ['Git'] }
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
+Plug 'jiangmiao/auto-pairs', { 'on': 'InsertEnter' }
+Plug 'mattn/vim-lsp-settings', { 'on': ['BufReadPre'] }
+Plug 'vimwiki/vimwiki', { 'on': 'VimwikiIndex' }
 
 call plug#end()
 
-autocmd FileType python setlocal omnifunc=lsp#complete
-
-inoremap <C-n> <C-x><C-o>
-augroup python_lsp_mappings
-  autocmd!
-  autocmd FileType python nnoremap <buffer> <silent> gd  :LspDefinition<CR>
-  autocmd FileType python nnoremap <buffer> <silent> gr  :LspReferences<CR>
-  autocmd FileType python nnoremap <buffer> <silent> gi  :LspImplementation<CR>
-  autocmd FileType python nnoremap <buffer> <silent> K   :LspHover<CR>
-  autocmd FileType python nnoremap <buffer> <silent> grn :LspRename<CR>
-  autocmd FileType python nnoremap <buffer> <silent> gca :LspCodeAction<CR>
-  autocmd FileType python nnoremap <buffer> <silent> [d  :LspPreviousDiagnostic<CR>
-  autocmd FileType python nnoremap <buffer> <silent> ]d  :LspNextDiagnostic<CR>
-augroup END
-
-" ==========================================================
+" ------------------------------
 " GENERAL SETTINGS
-" ==========================================================
+" ------------------------------
 
-" --- Encoding & File Management ---
-set encoding=utf-8
+" --- Encoding ---
 set fileencoding=utf-8
 set noswapfile
 set nobackup
 
-" --- Display & UI ---
-set number
-set relativenumber
-set cursorline
+" --- UI & Display ---
+set number relativenumber
 set laststatus=2
 set signcolumn=yes
 set nowrap
-set scrolloff=15
+set scrolloff=10
 set showmatch
 set foldlevel=99
-set pumheight=10
-
-" --- Windows, Splits & Mouse ---
-set splitbelow
-set splitright
+set pumheight=5
 set mouse=a
+set lazyredraw
+set ttyfast
 
 " --- Search ---
-set hlsearch
-set incsearch
-set ignorecase
-set smartcase
+set hlsearch incsearch ignorecase smartcase
 
-" --- Wildmenu & Completion ---
+" --- Completion & Wildmenu ---
 set completeopt=menuone,noselect
 set wildmode=full
 set wildoptions=pum
-set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
+set wildignore+=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
-" --- Clipboard ---
-set clipboard=unnamed
-
-" --- Behavior ---
+" --- Editing Behavior ---
 set backspace=indent,eol,start
+set tabstop=4 shiftwidth=4 expandtab autoindent
 set hidden
+set autoread
 
 " --- Performance ---
 set shortmess+=c
-set novisualbell
-set noerrorbells
+set noerrorbells novisualbell
 set t_vb=
 
 " --- Syntax & Filetypes ---
 syntax on
 filetype plugin indent on
 
-" --- Colorscheme ---
+" --- Theme & Colors ---
 set termguicolors
 set background=dark
-colorscheme evening
+set rtp+=~/.vim/colors/tokyonight.nvim/extras/vim
+colorscheme tokyonight-night
 
-" --- Data files ---
+" --- Clipboard ---
+if has('clipboard')
+    set clipboard=unnamed
+endif
+
+" --- Persistent Data ---
 if has('persistent_undo')
     let &undodir = expand('~/.vim/undodir')
     call mkdir(&undodir, 'p', 0700)
     set undofile
 endif
+
 call mkdir(expand('~/.vim/history'), 'p')
 set history=500
 set viminfo='50,f1,<500,n~/.vim/viminfo
 
 " --- Runtime Files ---
-runtime! macros/matchit.vim
-runtime! macros/man.vim
+runtime! macros/matchit.vim macros/man.vim
 
-" ==========================================================
-" INDENTATION & FORMATTING
-" ==========================================================
-set tabstop=4
-set shiftwidth=4
-set expandtab
-set autoindent
+" ------------------------------
+" KEY MAPPINGS
+" ------------------------------
 
-" ==========================================================
-" PLUGIN CONFIGURATIONS
-" ==========================================================
+let mapleader = "\<Space>"
+
+nnoremap <leader><leader> :CtrlPBuffer<CR>
+nnoremap <leader>q :call ConfirmBdelete()<CR>
+nnoremap <leader>u :UndotreeToggle<CR>
+nnoremap <leader>o :copen<CR>
+nnoremap <leader>n :bnext<CR>
+nnoremap <leader>N :bprev<CR>
+nnoremap <leader>g :Git<CR>
+nnoremap <leader>ww :VimwikiIndex<CR>
+nnoremap <leader>y :%y+<CR>
+
+nnoremap <C-w>e :enew<CR>
+nnoremap <C-w>t :tabnew<CR>
+nnoremap <C-w>Q :qa<CR>
+nnoremap <Esc> :nohlsearch<Bar>:echo<CR>
+nnoremap <F2> :windo set ft=json<CR>
+
+nnoremap gl :Git log<CR><C-w>T
+nnoremap U <C-r>
+nnoremap > >>g
+nnoremap < <g
+xnoremap < <gv
+xnoremap > >gv
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+augroup qf_mappings
+    autocmd!
+    autocmd FileType qf nnoremap <buffer> <C-n> :cnext<CR><C-w>w
+    autocmd FileType qf nnoremap <buffer> <C-p> :cprev<CR><C-w>w
+augroup END
+
+" ------------------------------
+" PLUGIN CONFIGURATION
+" ------------------------------
 
 " --- Vimwiki ---
 let g:vimwiki_list = [{
@@ -131,112 +138,54 @@ let g:vimwiki_list = [{
       \ 'syntax': 'markdown',
       \ 'ext': '.md'
       \ }]
-
-" --- Format JSON with jq ---
-if executable('jq')
-    function! FormatJSONWithJq()
-        let l:view = winsaveview()
-        silent %!jq '.'
-        call winrestview(l:view)
-    endfunction
-    autocmd FileType json nnoremap <buffer> <leader>js :call FormatJSONWithJq()<CR>
-endif
-
-" --- Format Python with black ---
-if executable('black')
-    function! FormatPythonWithBlack()
-        let l:view = winsaveview()
-        execute '!black %'
-        call winrestview(l:view)
-    endfunction
-    autocmd FileType python nnoremap <buffer> <leader>js :call FormatPythonWithBlack()<CR>
-endif
-
-" ==========================================================
-" KEY MAPPINGS
-" ==========================================================
-
-" --- Leader ---
-let mapleader = "\<Space>"
-
-" --- File & Buffer ---
-nnoremap <leader><leader> :CtrlPBuffer<CR>
-nnoremap <leader>f :CtrlP<CR>
-nnoremap <leader>r :CtrlPMRUFiles<CR>
-nnoremap <leader>q :call ConfirmBdelete()<CR>
-nnoremap <leader>o :copen<CR>
-nnoremap <C-l> :bnext<CR>
-nnoremap <C-h> :bprev<CR>
-nnoremap <C-w>e :enew<CR>
-nnoremap <C-w>Q :qa<CR>
-nnoremap <leader>e :Explore<CR>
-nnoremap <leader>. :edit $MYVIMRC<CR>
-nnoremap <F2> :windo set ft=json<CR>
-
-" --- Git ---
-nnoremap <leader>gg :Git<CR>
-nnoremap <leader>gl :Git log<CR><C-w>T
-
-" --- Clipboard & Editing ---
-nnoremap <leader>y :%y+<CR>
-nnoremap <leader>dw :call StripTrailingWhitespaces()<CR>
-nnoremap U <C-r>
-nnoremap > >>g
-nnoremap < <<g
-xnoremap < <gv
-xnoremap > >gv
-
-" --- Move Lines ---
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
-
-" --- Misc ---
-nnoremap <Esc> :nohlsearch<Bar>:echo<CR>
-nnoremap <leader>u :UndotreeToggle<CR>
-
-" --- Python Specific ---
-augroup PythonUvRun
-  autocmd!
-  autocmd FileType python nnoremap <buffer> <leader>p :!uv run %<CR>
-augroup END
-
 autocmd FileType vimwiki abbreviate cb - [ ]
 
-" ==========================================================
-" FUNCTIONS
-" ==========================================================
+" --- Highlighted Yank ---
+let g:highlightedyank_highlight_duration = 150
 
-" Confirm before closing buffer
-function! ConfirmBdelete()
-  if confirm("Are you sure you want to close this buffer?", "&Yes\n&No", 2) == 1
-    bdelete!
-  endif
-endfunction
+" ------------------------------
+" PYTHON: LSP + FORMAT + RUN
+" ------------------------------
 
-" Strip trailing whitespace
-function! StripTrailingWhitespaces()
-    let l:save = winsaveview()
-    %s/\s\+$//e
-    call winrestview(l:save)
-endfunction
+augroup python_setup
+    autocmd!
+    autocmd FileType python setlocal
+                \ omnifunc=lsp#complete
+                \ foldmethod=expr
+                \ foldexpr=lsp#ui#vim#folding#foldexpr()
+                \ foldtext=lsp#ui#vim#folding#foldtext()
+    autocmd FileType python inoremap <C-n> <C-x><C-o>
+    autocmd FileType python nnoremap <buffer> <silent> gd  :LspDefinition<CR>
+    autocmd FileType python nnoremap <buffer> <silent> gr  :LspReferences<CR>
+    autocmd FileType python nnoremap <buffer> <silent> gi  :LspImplementation<CR>
+    autocmd FileType python nnoremap <buffer> <silent> K   :LspHover<CR>
+    autocmd FileType python nnoremap <buffer> <silent> grn :LspRename<CR>
+    autocmd FileType python nnoremap <buffer> <silent> gca :LspCodeAction<CR>
+    autocmd FileType python nnoremap <buffer> <silent> [d  :LspPreviousDiagnostic<CR>
+    autocmd FileType python nnoremap <buffer> <silent> ]d  :LspNextDiagnostic<CR>
+    if executable('black')
+        autocmd FileType python nnoremap <buffer> <leader>js :!black %<CR>
+    endif
+    autocmd FileType python nnoremap <buffer> <leader>p :!uv run %<CR>
+augroup END
 
-" ==========================================================
-" AUTOCOMMAND GROUPS
-" ==========================================================
+if executable('jq')
+    autocmd FileType json nnoremap <buffer> <leader>js :%!jq '.'<CR>
+endif
 
-" Strip whitespace on save
 augroup strip_whitespace
     autocmd!
-    autocmd BufWritePre * :call StripTrailingWhitespaces()
+    autocmd BufWritePre * :silent! call StripTrailingWhitespaces()
 augroup END
 
-" Quickfix navigation
-augroup qf_mappings
-    autocmd!
-    autocmd FileType qf nnoremap <buffer> <C-n> :cnext<CR><C-w>w
-    autocmd FileType qf nnoremap <buffer> <C-p> :cprev<CR><C-w>w
-    autocmd FileType qf nnoremap <buffer> o <CR>
-augroup END
+function! ConfirmBdelete()
+    if confirm("Close this buffer?", "&Yes\n&No", 2) == 1
+        bdelete!
+    endif
+endfunction
 
-" Disable default Vim message group
-autocmd! vimHints
+function! StripTrailingWhitespaces()
+    let l:view = winsaveview()
+    %s/\s\+$//e
+    call winrestview(l:view)
+endfunction

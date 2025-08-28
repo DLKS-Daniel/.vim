@@ -4,6 +4,7 @@ viminfo
 
 # Vim plug
 plugged/*
+colors/*
 autoload/*
 history/*
 undodir/*
