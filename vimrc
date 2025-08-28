@@ -1,9 +1,5 @@
-" ------------------------------
-" Plugin Manager (vim-plug)
-" ------------------------------
 call plug#begin('~/.vim/plugged')
 
-" --- Core Productivity ---
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
@@ -20,83 +16,40 @@ Plug 'vimwiki/vimwiki', { 'on': 'VimwikiIndex' }
 
 call plug#end()
 
-" ------------------------------
-" GENERAL SETTINGS
-" ------------------------------
-
-" --- Encoding ---
-set fileencoding=utf-8
-set noswapfile
-set nobackup
-
-" --- UI & Display ---
+set encoding=utf-8
+set noswapfile nobackup hidden autoread
 set number relativenumber
-set laststatus=2
-set signcolumn=yes
-set nowrap
-set scrolloff=10
-set showmatch
+set laststatus=2 signcolumn=yes nowrap scrolloff=10 showmatch
 set foldlevel=99
 set pumheight=5
 set mouse=a
-set lazyredraw
-set ttyfast
-
-" --- Search ---
+set lazyredraw ttyfast shortmess+=c
+set noerrorbells novisualbell t_vb=
 set hlsearch incsearch ignorecase smartcase
-
-" --- Completion & Wildmenu ---
 set completeopt=menuone,noselect
-set wildmode=full
-set wildoptions=pum
+set wildmode=full wildoptions=pum
 set wildignore+=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
-
-" --- Editing Behavior ---
 set backspace=indent,eol,start
 set tabstop=4 shiftwidth=4 expandtab autoindent
-set hidden
-set autoread
-
-" --- Performance ---
-set shortmess+=c
-set noerrorbells novisualbell
-set t_vb=
-
-" --- Syntax & Filetypes ---
 syntax on
 filetype plugin indent on
-
-" --- Theme & Colors ---
-set termguicolors
-set background=dark
+set termguicolors background=dark
 set rtp+=~/.vim/colors/tokyonight.nvim/extras/vim
 colorscheme tokyonight-night
-
-" --- Clipboard ---
 if has('clipboard')
     set clipboard=unnamed
 endif
-
-" --- Persistent Data ---
 if has('persistent_undo')
     let &undodir = expand('~/.vim/undodir')
     call mkdir(&undodir, 'p', 0700)
     set undofile
 endif
-
 call mkdir(expand('~/.vim/history'), 'p')
 set history=500
 set viminfo='50,f1,<500,n~/.vim/viminfo
-
-" --- Runtime Files ---
 runtime! macros/matchit.vim macros/man.vim
 
-" ------------------------------
-" KEY MAPPINGS
-" ------------------------------
-
 let mapleader = "\<Space>"
-
 nnoremap <leader><leader> :CtrlPBuffer<CR>
 nnoremap <leader>q :call ConfirmBdelete()<CR>
 nnoremap <leader>u :UndotreeToggle<CR>
@@ -106,13 +59,11 @@ nnoremap <leader>N :bprev<CR>
 nnoremap <leader>g :Git<CR>
 nnoremap <leader>ww :VimwikiIndex<CR>
 nnoremap <leader>y :%y+<CR>
-
 nnoremap <C-w>e :enew<CR>
 nnoremap <C-w>t :tabnew<CR>
 nnoremap <C-w>Q :qa<CR>
 nnoremap <Esc> :nohlsearch<Bar>:echo<CR>
 nnoremap <F2> :windo set ft=json<CR>
-
 nnoremap gl :Git log<CR><C-w>T
 nnoremap U <C-r>
 nnoremap > >>g
@@ -121,36 +72,21 @@ xnoremap < <gv
 xnoremap > >gv
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
-
 augroup qf_mappings
     autocmd!
     autocmd FileType qf nnoremap <buffer> <C-n> :cnext<CR><C-w>w
     autocmd FileType qf nnoremap <buffer> <C-p> :cprev<CR><C-w>w
 augroup END
 
-" ------------------------------
-" PLUGIN CONFIGURATION
-" ------------------------------
-
-" --- Vimwiki ---
 let g:vimwiki_list = [{
       \ 'path': '~/vimwiki/',
       \ 'syntax': 'markdown',
-      \ 'ext': '.md'
-      \ }]
+      \ 'ext': '.md' }]
 autocmd FileType vimwiki abbreviate cb - [ ]
-
-" --- Highlighted Yank ---
 let g:highlightedyank_highlight_duration = 150
-
-" ------------------------------
-" PYTHON: LSP + FORMAT + RUN
-" ------------------------------
-
 augroup python_setup
     autocmd!
-    autocmd FileType python setlocal
-                \ omnifunc=lsp#complete
+    autocmd FileType python setlocal omnifunc=lsp#complete
                 \ foldmethod=expr
                 \ foldexpr=lsp#ui#vim#folding#foldexpr()
                 \ foldtext=lsp#ui#vim#folding#foldtext()
@@ -168,22 +104,18 @@ augroup python_setup
     endif
     autocmd FileType python nnoremap <buffer> <leader>p :!uv run %<CR>
 augroup END
-
 if executable('jq')
     autocmd FileType json nnoremap <buffer> <leader>js :%!jq '.'<CR>
 endif
-
 augroup strip_whitespace
     autocmd!
     autocmd BufWritePre * :silent! call StripTrailingWhitespaces()
 augroup END
-
 function! ConfirmBdelete()
     if confirm("Close this buffer?", "&Yes\n&No", 2) == 1
         bdelete!
     endif
 endfunction
-
 function! StripTrailingWhitespaces()
     let l:view = winsaveview()
     %s/\s\+$//e
