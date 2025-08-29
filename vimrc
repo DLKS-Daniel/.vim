@@ -5,13 +5,11 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive', { 'on': ['Git'] }
-
-Plug 'machakann/vim-highlightedyank'
-Plug 'airblade/vim-gitgutter'
-Plug 'jiangmiao/auto-pairs', { 'on': 'InsertEnter' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'vimwiki/vimwiki', { 'on': 'VimwikiIndex' }
-
+Plug 'machakann/vim-highlightedyank'
+Plug 'airblade/vim-gitgutter'
+Plug 'jiangmiao/auto-pairs'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
 
@@ -19,7 +17,6 @@ call plug#end()
 
 syntax on
 filetype plugin indent on
-
 set encoding=utf-8
 set termguicolors
 set background=dark
@@ -33,76 +30,64 @@ set relativenumber
 set laststatus=2
 set signcolumn=yes
 set statusline=%<%f\ %=%l,%c
-
 set backspace=indent,eol,start
 set tabstop=4
 set shiftwidth=4
 set expandtab
 set autoindent
-
 set foldlevel=99
 set foldmethod=manual
-
 set pumheight=10
 set completeopt=menuone,noselect
-
 set hlsearch
 set incsearch
 set ignorecase
 set smartcase
-
 set wildmode=full
 set wildoptions=pum
-set wildignore+=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
-
+set wildignore+=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx,*/tmp/*,*.so,*.swp,*.zip,*.tar.gz,*/__pycache__/*
 set ttyfast
 set shortmess+=c
-
 set noerrorbells
 set novisualbell
 set t_vb=
-
 set mouse=a
-
 if has('clipboard')
     set clipboard=unnamed
 endif
-
 set noswapfile
 set nobackup
 set hidden
 set autoread
-
 if has('persistent_undo')
     let &undodir = expand('~/.vim/undodir')
     call mkdir(&undodir, 'p', 0700)
     set undofile
 endif
-
-call mkdir(expand('~/.vim/history'), 'p')
 set history=50
-set viminfo='50,f1,<500,n~/.vim/viminfo
-
-set path-=/usr/include
+set viminfo='50,f1,<50,n~/.vim/viminfo
+set path+=**/*
 
 let mapleader = "\<Space>"
 
 nnoremap <leader><leader> :buffers<CR>
-nnoremap <leader>f :find **/*
-nnoremap <leader>r :vimgrep // **<Left><Left><Left><Left>
+nnoremap <leader>f :find<Space>
+nnoremap <leader>t q:
+nnoremap <leader>r :call GrepPrompt()<CR>
 nnoremap <leader>q :call ConfirmBdelete()<CR>
 nnoremap <leader>u :UndotreeToggle<CR>
-nnoremap <leader>o :copen<CR>
-nnoremap <leader>n :bnext<CR>
-nnoremap <leader>N :bprev<CR>
 nnoremap <leader>g :Git<CR>
 nnoremap <leader>ww :VimwikiIndex<CR>
 nnoremap <leader>y :%y+<CR>
+nnoremap <leader>o :copen<CR>
+nnoremap <leader>s :e #<CR>
+nnoremap <leader>S :sf #<CR>
+nnoremap <C-n> :bnext<CR>
+nnoremap <C-p> :bprev<CR>
 nnoremap <C-w>e :enew<CR>
-nnoremap <C-w>t :tabnew<CR>
-nnoremap <C-w>Q :qa<CR>
 nnoremap <Esc> :nohlsearch<Bar>:echo<CR>
-nnoremap <F2> :windo set ft=json<CR>
+nnoremap <F2> :edit $MYVIMRC<CR>
+
 nnoremap gl :Git log<CR><C-w>T
 nnoremap U <C-r>
 nnoremap > >>
@@ -123,15 +108,11 @@ let g:vimwiki_list = [{
             \ 'syntax': 'markdown',
             \ 'ext': '.md' }]
 autocmd FileType vimwiki abbreviate cb - [ ]
-
 let g:highlightedyank_highlight_duration = 150
 
 augroup python_setup
     autocmd!
     autocmd FileType python setlocal omnifunc=lsp#complete
-                \ foldmethod=expr
-                \ foldexpr=lsp#ui#vim#folding#foldexpr()
-                \ foldtext=lsp#ui#vim#folding#foldtext()
     autocmd FileType python inoremap <C-n> <C-x><C-o>
     autocmd FileType python nnoremap <buffer> <silent> gd  :LspDefinition<CR>
     autocmd FileType python nnoremap <buffer> <silent> grr :LspReferences<CR>
@@ -139,8 +120,6 @@ augroup python_setup
     autocmd FileType python nnoremap <buffer> <silent> K   :LspHover<CR>
     autocmd FileType python nnoremap <buffer> <silent> grn :LspRename<CR>
     autocmd FileType python nnoremap <buffer> <silent> gca :LspCodeAction<CR>
-    autocmd FileType python nnoremap <buffer> <silent> [d  :LspPreviousDiagnostic<CR>
-    autocmd FileType python nnoremap <buffer> <silent> ]d  :LspNextDiagnostic<CR>
     if executable('black')
         autocmd FileType python nnoremap <buffer> <leader>js :w<CR>:!black %<CR>
     endif
@@ -167,3 +146,14 @@ function! StripTrailingWhitespaces()
     %s/\s\+$//e
     call winrestview(l:view)
 endfunction
+
+function! GrepPrompt()
+  let pattern = input('Grep pattern: ')
+  if empty(pattern)
+    echo "No pattern provided, aborting."
+    return
+  endif
+  execute 'vimgrep /' . pattern . '/ **'
+  copen
+endfunction
+
